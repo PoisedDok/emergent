@@ -6,7 +6,7 @@
 
 > A self-hosted, enterprise-grade, sovereign network infrastructure with strict Zero-Trust paradigms.
 >
-> **Architected by [Krish Dokania](https://github.com/PoisedDok) | Built at [Aether Inc.](https://aetherinc.xyz)**
+> **Architected by [Krish Dokania](https://github.com/PoisedDok) | [AetherInc.](https://aetherinc.xyz)**
 
 Emergent is not a typical homelab tutorial. It is a highly opinionated, brutally secure, production-ready stack for running your own private internet. It combines **Headscale** (Zero-Trust Mesh VPN), **AdGuard Home** (DNS sinkhole), **Unbound** (DNS-over-TLS), and **Tor Proxy** (The Ghost Protocol) into an impenetrable fortress.
 
