@@ -27,7 +27,7 @@ flowchart TD
         hs["Headscale Control Plane\nPort: 6500 (Auth & IP Assign)"]:::container
         
         subgraph DNS_Flow ["DNS Resolution Path"]
-            ag["AdGuard Home\nIP: 100.64.0.1:53\n(Ad/Tracker Blackhole)"]:::container
+            ag["AdGuard Home Sidecar\nIP: 100.64.0.4:53\n(Ad/Tracker Blackhole)"]:::container
             mdns["Headscale MagicDNS\nIP: 100.100.100.100\n(Client Name Resolver)"]:::container
             un["Unbound\nIP: 172.20.0.10\n(DNS-over-TLS)"]:::container
         end
@@ -82,9 +82,9 @@ Most open-source stack tutorials make critical security flaws:
 
 **The Emergent Stack fixes all of this:**
 *   **Immutable Supply Chain:** The `docker-compose.yml` does not pull image binaries. It uses Git Submodules to pull the source code of Headscale and AdGuard, building the binaries locally on your machine via multi-stage Dockerfiles.
-*   **Zero-Trust Bindings:** AdGuard Home and Tor Proxy ports are bound *exclusively* to the Headscale VPN IP (`100.64.0.1`) and `127.0.0.1`. If an attacker gets onto your physical Wi-Fi, they will scan your server and see absolutely nothing.
+*   **Zero-Trust Sidecar Architecture:** AdGuard Home is not bound to `0.0.0.0` or even `127.0.0.1` on the host. It is structurally fused to a dedicated Tailscale Sidecar container. The only way to reach the DNS server is to successfully negotiate a cryptographic WireGuard handshake with the Sidecar.
 *   **Hardened Docker Socket:** The raw `/var/run/docker.sock` is locked behind a strict, read-only `docker-socket-proxy`.
-*   **Dynamic DNS Tracking:** AdGuard Home is wired back into Headscale's MagicDNS (`100.100.100.100`). When a connected VPN client queries a domain, AdGuard dynamically resolves their Tailscale IP to their machine hostname. You get perfect, per-device traffic statistics without manually hardcoding IPs.
+*   **Dynamic DNS Tracking:** Because of the Sidecar, AdGuard bypasses Docker's NAT proxy and sees the exact `100.64.x.x` IP of every device. It is wired back into Headscale's MagicDNS (`100.100.100.100`) to dynamically resolve those IPs to their machine hostnames. You get perfect, per-device traffic statistics without manually hardcoding IPs.
 *   **Automatic Exit Node:** The included `acl.json` is pre-configured to automatically approve `0.0.0.0/0` routes. This allows your host machine to instantly function as an encrypted Exit Node for your mobile devices on public Wi-Fi.
 
 ## Architecture & Data Flow
