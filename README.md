@@ -10,6 +10,9 @@ Emergent is not a typical homelab tutorial. It is a highly opinionated, brutally
 
 ## Why This Stack is Different (The Philosophy)
 
+### Built by Aether Inc.
+At [Aether Inc.](https://aetherinc.xyz), we build "The Assistant That Actually Knows You. (And Keeps Your Secrets.)" Our core mission is absolute privacy—an AI companion that operates without sharing a single word with the internet. We realize that true digital sovereignty requires an underlying network architecture that is just as paranoid and secure as the software running on top of it. **The Emergent Stack is that architecture.** We are open-sourcing it because privacy is a fundamental human right, not a premium feature.
+
 Most open-source stack tutorials make critical security flaws:
 1. They bind internal administration dashboards to `0.0.0.0` (exposing them to the entire local Wi-Fi network).
 2. They map the raw Docker socket into containers, allowing easy privilege escalation.
