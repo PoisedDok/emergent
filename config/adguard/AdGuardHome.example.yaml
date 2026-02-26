@@ -90,18 +90,22 @@ tls:
   strict_sni_check: false
 querylog:
   dir_path: ""
-  ignored: []
+  ignored:
+    - '*.log.tailscale.com'
+    - log.tailscale.com
   interval: 2160h
   size_memory: 1000
   enabled: true
-  ignored_enabled: false
+  ignored_enabled: true
   file_enabled: true
 statistics:
   dir_path: ""
-  ignored: []
+  ignored:
+    - '*.log.tailscale.com'
+    - log.tailscale.com
   interval: 24h
   enabled: true
-  ignored_enabled: false
+  ignored_enabled: true
 filters:
   - enabled: true
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
