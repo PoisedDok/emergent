@@ -1,5 +1,9 @@
 # Emergent Privacy Stack
 
+<p align="center">
+  <img src="image.png" alt="Emergent Logo" width="300" />
+</p>
+
 > A self-hosted, enterprise-grade, sovereign network infrastructure with strict Zero-Trust paradigms.
 >
 > **Architected by [Krish Dokania](https://github.com/PoisedDok) | Built at [Aether Inc.](https://aetherinc.xyz)**

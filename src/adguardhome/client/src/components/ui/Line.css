@@ -1,0 +1,29 @@
+.line__tooltip {
+    padding: 8px 12px;
+    line-height: 1.4;
+    color: var(--black);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .line__tooltip {
+    color: #ffffff;
+    background: rgba(41, 42, 45, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.line__tooltip-text {
+    font-size: 0.85rem;
+}
+
+.card-chart-bg {
+    color: var(--black);
+}
+
+.card-chart-bg path[d^='M0,32'] {
+    transform: translateY(32px);
+}

@@ -4,9 +4,6 @@
 [submodule "src/unbound-docker"]
 	path = src/unbound-docker
 	url = https://github.com/MatthewVance/unbound-docker.git
-[submodule "src/adguardhome"]
-	path = src/adguardhome
-	url = https://github.com/AdguardTeam/AdGuardHome.git
 [submodule "src/torproxy"]
 	path = src/torproxy
 	url = https://github.com/gnzsnz/torproxy.git
