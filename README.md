@@ -180,9 +180,9 @@ We built a custom CLI wrapper to make administering this complex stack trivial.
 
 This project is licensed under the MIT License. Copyright (c) 2026 Krish Dokania / Aether Inc.
 
-This stack integrates and heavily relies on the brilliance of the following open-source projects. We have embedded them as submodules to allow you to build from source:
+This stack integrates and heavily relies on the brilliance of the following open-source projects. We have embedded Headscale, Unbound, Tor Proxy, and Docker Socket Proxy as submodules, while heavily forking and natively embedding AdGuard Home to apply our custom security zero-trust interface:
 *   [Headscale](https://github.com/juanfont/headscale) by Juan Font (BSD-3-Clause)
-*   [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) by AdGuard (GPL-3.0)
+*   [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) by AdGuard (GPL-3.0) - *Hard-forked and modified for Emergent Stack*
 *   [Unbound Docker](https://github.com/MatthewVance/unbound-docker) by Matthew Vance (MIT)
 *   [Tor Proxy](https://github.com/gnzsnz/torproxy) by gnzsnz (MIT)
 *   [Docker Socket Proxy](https://github.com/Tecnativa/docker-socket-proxy) by Tecnativa (MIT)
