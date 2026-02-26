@@ -8,35 +8,40 @@ Emergent is not a typical homelab tutorial. It is a highly opinionated, brutally
 
 ```mermaid
 flowchart TD
+    %% Define Styles
+    classDef client fill:#2a2a2a,stroke:#4a4a4a,stroke-width:2px,color:#fff
+    classDef wireguard fill:#1e3a8a,stroke:#3a7ca5,stroke-width:2px,color:#fff
+    classDef container fill:#1c1917,stroke:#c2410c,stroke-width:2px,color:#fff
+    classDef external fill:#3f3f46,stroke:#71717a,stroke-width:2px,color:#fff
 
     subgraph Clients ["Encrypted VPN Clients"]
-        phone["iPhone (Tailscale App)\nIP: 100.64.0.2"]
-        laptop["Windows Laptop (Tailscale)\nIP: 100.64.0.3"]
+        phone["iPhone (Tailscale App)\nIP: 100.64.0.x"]:::client
+        laptop["Windows Laptop (Tailscale)\nIP: 100.64.0.y"]:::client
     end
 
     subgraph Tunnel ["The Transport Layer"]
-        wg["WireGuard Encrypted Tunnel\n(Direct Peer-to-Peer)"]
+        wg["WireGuard Encrypted Tunnel\n(Direct Peer-to-Peer)"]:::wireguard
     end
 
     subgraph Server ["Mac Mini (Docker Host)"]
-        hs["Headscale Control Plane\nPort: 6500 (Auth & IP Assign)"]
+        hs["Headscale Control Plane\nPort: 6500 (Auth & IP Assign)"]:::container
         
         subgraph DNS_Flow ["DNS Resolution Path"]
-            ag["AdGuard Home\nIP: 100.64.0.1:53\n(Ad/Tracker Blackhole)"]
-            mdns["Headscale MagicDNS\nIP: 100.100.100.100\n(Client Name Resolver)"]
-            un["Unbound\nIP: 172.20.0.10\n(DNS-over-TLS)"]
+            ag["AdGuard Home\nIP: 100.64.0.1:53\n(Ad/Tracker Blackhole)"]:::container
+            mdns["Headscale MagicDNS\nIP: 100.100.100.100\n(Client Name Resolver)"]:::container
+            un["Unbound\nIP: 172.20.0.10\n(DNS-over-TLS)"]:::container
         end
 
         subgraph Proxy_Flow ["Tor Proxy Path"]
-            tor["Tor Proxy\nIP: 100.64.0.1:6506 (HTTP)"]
+            tor["Tor Proxy\nIP: 100.64.0.1:6506 (HTTP)"]:::container
         end
     end
 
     subgraph External ["The Wild West"]
-        isp["Your ISP\n(Sees Only Encrypted Gibberish)"]
-        cf["Cloudflare DNS (1.1.1.1:853)"]
-        tornet["The Tor Network"]
-        web["Internet / .onion sites"]
+        isp["Your ISP\n(Sees Only Encrypted Gibberish)"]:::external
+        cf["Cloudflare DNS (1.1.1.1:853)"]:::external
+        tornet["The Tor Network"]:::external
+        web["Internet / .onion sites"]:::external
     end
 
     %% Auth Flow
@@ -51,7 +56,7 @@ flowchart TD
     wg <==>|"3. Proxy Traffic"| tor
 
     %% Internal DNS Logic
-    ag -->|"Who is 100.64.0.2?"| mdns
+    ag -->|"Who is 100.64.0.x?"| mdns
     mdns -.->|"It's krish-phone"| ag
     ag -->|"Where is google.com?"| un
 
