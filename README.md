@@ -178,11 +178,16 @@ We built a custom CLI wrapper to make administering this complex stack trivial.
 
 ## License & Attribution
 
-This project is licensed under the MIT License. Copyright (c) 2026 Krish Dokania / Aether Inc.
+The Emergent Stack architecture, orchestration, and deployment scripts are licensed under the **MIT License**. Copyright (c) 2026 Krish Dokania / Aether Inc.
 
-This stack integrates and heavily relies on the brilliance of the following open-source projects. We have embedded Headscale, Unbound, Tor Proxy, and Docker Socket Proxy as submodules, while heavily forking and natively embedding AdGuard Home to apply our custom security zero-trust interface:
+**CRITICAL LEGAL NOTICE REGARDING ADGUARD HOME:**
+This repository contains a natively embedded, heavily modified hard-fork of [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome). AdGuard Home is originally authored by AdGuard and is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+*   The source code located within the `src/adguardhome/` directory remains strictly governed by GPL-3.0.
+*   It is **NOT** covered by the MIT license.
+*   By operating, redistributing, or modifying the `src/adguardhome/` component, you are legally bound to comply with the GPL-3.0 terms, which mandates keeping the source open and retaining all original copyright notices.
+
+The remaining components are embedded as submodules under their respective permissive licenses:
 *   [Headscale](https://github.com/juanfont/headscale) by Juan Font (BSD-3-Clause)
-*   [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) by AdGuard (GPL-3.0) - *Hard-forked and modified for Emergent Stack*
 *   [Unbound Docker](https://github.com/MatthewVance/unbound-docker) by Matthew Vance (MIT)
 *   [Tor Proxy](https://github.com/gnzsnz/torproxy) by gnzsnz (MIT)
 *   [Docker Socket Proxy](https://github.com/Tecnativa/docker-socket-proxy) by Tecnativa (MIT)
