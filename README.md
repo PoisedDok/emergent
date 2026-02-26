@@ -115,12 +115,28 @@ Most open-source stack tutorials make critical security flaws:
     cp .env.example .env
     ```
     *(Edit `.env` to change the arbitrary ports if desired, default is 6500-6550).*
-3.  **Build from Source:**
+
+3.  **Generate the Sidecar Auth Key:**
+    To ensure AdGuard runs on a strictly isolated identity, it needs its own Tailscale pre-auth key.
     ```bash
-    make build
+    # Temporarily bring up only Headscale
+    docker compose up -d headscale
+    
+    # Initialize the VPN admin and get a key
+    ./manage.sh vpn-init
+    
+    # Generate an extra key for the Sidecar
+    ./manage.sh vpn-key
     ```
-4.  **Launch the Stack:**
+    *Copy the output key, open `.env`, and add it to the bottom:*
+    `TS_SIDECAR_AUTHKEY=hskey-auth-xxxx...`
+
+4.  **Build & Deploy:**
     ```bash
+    # Build the God-level source images
+    make build
+
+    # Secure permissions and spin up the entire stack in detached mode
     make up
     ```
 
@@ -147,7 +163,8 @@ We built a custom CLI wrapper to make administering this complex stack trivial.
 
 1.  **Access the AdGuard Dashboard:**
     *   Ensure your client is connected to the VPN.
-    *   Navigate to `http://100.64.0.1:6502` (or `http://127.0.0.1:6502` if on the host machine).
+    *   Find the Sidecar IP via `./manage.sh vpn-nodes` (look for `adguard-sidecar`).
+    *   Navigate to `http://<SIDECAR_IP>:80` (e.g., `http://100.64.0.4:80`), or `http://127.0.0.1:6502` if on the host machine.
     *   Default Login: `admin` / `emergent`.
     *   *Change this password immediately in Settings -> General Settings.*
 2.  **Access the Tor Network:**
