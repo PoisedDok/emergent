@@ -3,9 +3,10 @@
 
 # Data directories (do not leak DBs, keys, or logs)
 data/
-data/headscale/*
-data/adguard/*
-data/torproxy/*
+
+# Specific Configs
+config/headscale/config.yaml
+config/adguard/AdGuardHome.yaml
 
 # Environment variables
 .env
@@ -15,3 +16,4 @@ data/torproxy/*
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+*.cursor

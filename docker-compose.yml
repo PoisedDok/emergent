@@ -36,6 +36,31 @@ services:
         ipv4_address: 172.20.0.10
 
   # --------------------------------------------------------
+  # PHASE 3.5: THE SIDECAR
+  # --------------------------------------------------------
+  tailscale-sidecar:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-sidecar
+    hostname: adguard-sidecar
+    environment:
+      - TS_AUTHKEY=${TS_SIDECAR_AUTHKEY}
+      - TS_EXTRA_ARGS=--login-server=http://${HOST_LAN_IP:-192.168.0.105}:6500 --accept-dns=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_NO_LOGS_NO_SUPPORT=true
+    volumes:
+      - ./data/sidecar/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    networks:
+      - secure_net
+    ports:
+      - "127.0.0.1:${ADGUARD_WEB_PORT:-6502}:80/tcp"
+      - "127.0.0.1:6505:3000/tcp"
+    restart: unless-stopped
+
+  # --------------------------------------------------------
   # PHASE 3: THE AD/TRACKER BLACKHOLE
   # --------------------------------------------------------
   adguardhome:
@@ -45,22 +70,13 @@ services:
     container_name: adguardhome
     restart: unless-stopped
     command: -c /opt/adguardhome/conf/AdGuardHome.yaml -w /opt/adguardhome/work
-    ports:
-      - "127.0.0.1:${ADGUARD_DNS_PORT:-6501}:53/tcp"
-      - "100.64.0.1:53:53/tcp"
-      - "127.0.0.1:${ADGUARD_DNS_PORT:-6501}:53/udp"
-      - "100.64.0.1:53:53/udp"
-      - "127.0.0.1:${ADGUARD_WEB_PORT:-6502}:80/tcp"
-      - "100.64.0.1:${ADGUARD_WEB_PORT:-6502}:80/tcp"
-      - "127.0.0.1:6505:3000/tcp"
-      - "100.64.0.1:6505:3000/tcp"
+    network_mode: "service:tailscale-sidecar"
     volumes:
       - ./data/adguard/work:/opt/adguardhome/work
-      - ./data/adguard/conf:/opt/adguardhome/conf
-    networks:
-      - secure_net
+      - ./config/adguard:/opt/adguardhome/conf
     depends_on:
       - unbound
+      - tailscale-sidecar
 
   # --------------------------------------------------------
   # PHASE 4: THE GHOST PROTOCOL (TOR)

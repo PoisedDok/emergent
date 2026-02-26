@@ -22,7 +22,7 @@ dns:
   refuse_any: true
   upstream_dns:
     - 172.20.0.10
-    - "[/100.in-addr.arpa/]100.100.100.100"
+    - '[/100.in-addr.arpa/]100.100.100.100'
   upstream_dns_file: ""
   bootstrap_dns:
     - 9.9.9.10
