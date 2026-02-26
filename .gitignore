@@ -9,7 +9,7 @@ config/headscale/config.yaml
 config/adguard/AdGuardHome.yaml
 
 # Environment variables
-.env
+*.env
 
 # Logs
 *.log

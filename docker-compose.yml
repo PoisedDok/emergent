@@ -47,6 +47,7 @@ services:
       - TS_EXTRA_ARGS=--login-server=http://${HOST_LAN_IP:-192.168.0.105}:6500 --accept-dns=false
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_NO_LOGS_NO_SUPPORT=true
+      - TS_USERSPACE=false
     volumes:
       - ./data/sidecar/state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
