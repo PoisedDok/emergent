@@ -1,6 +1,8 @@
 # Emergent Privacy Stack
 
 > A self-hosted, God-level, sovereign network infrastructure with strict Zero-Trust paradigms.
+>
+> **Architected by [Krish Dokania](https://github.com/PoisedDok) | Built at [Aether Inc.](https://aetherinc.xyz)**
 
 Emergent is not a typical homelab tutorial. It is a highly opinionated, brutally secure, production-ready stack for running your own private internet. It combines **Headscale** (Zero-Trust Mesh VPN), **AdGuard Home** (DNS sinkhole), **Unbound** (DNS-over-TLS), and **Tor Proxy** (The Ghost Protocol) into an impenetrable fortress.
 
@@ -91,7 +93,7 @@ We built a custom CLI wrapper to make administering this complex stack trivial.
 
 ## License & Attribution
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. Copyright (c) 2026 Krish Dokania / Aether Inc.
 
 This stack integrates and heavily relies on the brilliance of the following open-source projects. We have embedded them as submodules to allow you to build from source:
 *   [Headscale](https://github.com/juanfont/headscale) by Juan Font (BSD-3-Clause)
