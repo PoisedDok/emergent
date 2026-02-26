@@ -10,7 +10,7 @@
 #
 # https://myheadscale.example.com:443
 #
-server_url: http://192.168.0.105:6500
+server_url: http://0.0.0.0:6500
 
 # Address to listen to / bind to on the server
 #
@@ -280,15 +280,12 @@ dns:
 
   # Whether to use the local DNS settings of a node or override the local DNS
   # settings (default) and force the use of Headscale's DNS configuration.
-  override_local_dns: true
+  override_local_dns: false
 
   # List of DNS servers to expose to clients.
   nameservers:
     global:
-      - 1.1.1.1
-      - 1.0.0.1
-      - 2606:4700:4700::1111
-      - 2606:4700:4700::1001
+      - 100.64.0.1
 
       # NextDNS (see https://tailscale.com/kb/1218/nextdns/).
       # "abc123" is example NextDNS ID, replace with yours.
