@@ -45,10 +45,14 @@ services:
     restart: unless-stopped
     command: -c /opt/adguardhome/conf/AdGuardHome.yaml -w /opt/adguardhome/work
     ports:
-      - "${ADGUARD_DNS_PORT:-6501}:53/tcp"
-      - "${ADGUARD_DNS_PORT:-6501}:53/udp"
-      - "${ADGUARD_WEB_PORT:-6502}:80/tcp"
-      - "6505:3000/tcp"
+      - "127.0.0.1:${ADGUARD_DNS_PORT:-6501}:53/tcp"
+      - "100.64.0.1:${ADGUARD_DNS_PORT:-6501}:53/tcp"
+      - "127.0.0.1:${ADGUARD_DNS_PORT:-6501}:53/udp"
+      - "100.64.0.1:${ADGUARD_DNS_PORT:-6501}:53/udp"
+      - "127.0.0.1:${ADGUARD_WEB_PORT:-6502}:80/tcp"
+      - "100.64.0.1:${ADGUARD_WEB_PORT:-6502}:80/tcp"
+      - "127.0.0.1:6505:3000/tcp"
+      - "100.64.0.1:6505:3000/tcp"
     volumes:
       - ./data/adguard/work:/opt/adguardhome/work
       - ./data/adguard/conf:/opt/adguardhome/conf
@@ -67,8 +71,10 @@ services:
     container_name: torproxy
     restart: unless-stopped
     ports:
-      - "0.0.0.0:${TOR_PROXY_PORT:-6503}:9050"
-      - "0.0.0.0:${TOR_HTTP_PORT:-6506}:9051"
+      - "127.0.0.1:${TOR_PROXY_PORT:-6503}:9050"
+      - "100.64.0.1:${TOR_PROXY_PORT:-6503}:9050"
+      - "127.0.0.1:${TOR_HTTP_PORT:-6506}:9051"
+      - "100.64.0.1:${TOR_HTTP_PORT:-6506}:9051"
     volumes:
       - ./config/torproxy/torrc:/etc/tor/torrc:ro
       - ./data/torproxy/data:/var/lib/tor
