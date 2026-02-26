@@ -67,8 +67,8 @@ services:
     container_name: torproxy
     restart: unless-stopped
     ports:
-      - "${TOR_PROXY_PORT:-6503}:9050"
-      - "${TOR_HTTP_PORT:-6506}:9051"
+      - "0.0.0.0:${TOR_PROXY_PORT:-6503}:9050"
+      - "0.0.0.0:${TOR_HTTP_PORT:-6506}:9051"
     volumes:
       - ./config/torproxy/torrc:/etc/tor/torrc:ro
       - ./data/torproxy/data:/var/lib/tor
