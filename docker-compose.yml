@@ -56,7 +56,7 @@ services:
       - "100.64.0.1:6505:3000/tcp"
     volumes:
       - ./data/adguard/work:/opt/adguardhome/work
-      - ./config/adguard/AdGuardHome.yaml.example:/opt/adguardhome/conf/AdGuardHome.yaml
+      - ./data/adguard/conf:/opt/adguardhome/conf
     networks:
       - secure_net
     depends_on:

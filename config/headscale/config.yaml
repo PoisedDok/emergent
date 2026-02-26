@@ -285,7 +285,7 @@ dns:
   # List of DNS servers to expose to clients.
   nameservers:
     global:
-      - 100.64.0.1
+      - 100.64.0.1 # This IP should be the Tailscale IP of your Headscale node (hosting AdGuard)
 
       # NextDNS (see https://tailscale.com/kb/1218/nextdns/).
       # "abc123" is example NextDNS ID, replace with yours.

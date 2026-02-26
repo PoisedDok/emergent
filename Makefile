@@ -2,8 +2,9 @@
 
 setup:
 	git submodule update --init --recursive
-	mkdir -p config/headscale config/unbound config/torproxy
+	mkdir -p config/headscale config/unbound config/torproxy config/adguard
 	mkdir -p data/headscale data/adguard/work data/adguard/conf data/torproxy/data
+	cp config/adguard/AdGuardHome.yaml.example data/adguard/conf/AdGuardHome.yaml
 	touch data/headscale/db.sqlite
 	@echo "Setup complete. Please review .env and configs before running 'make build'."
 
