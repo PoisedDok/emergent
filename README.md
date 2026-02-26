@@ -6,7 +6,68 @@
 
 Emergent is not a typical homelab tutorial. It is a highly opinionated, brutally secure, production-ready stack for running your own private internet. It combines **Headscale** (Zero-Trust Mesh VPN), **AdGuard Home** (DNS sinkhole), **Unbound** (DNS-over-TLS), and **Tor Proxy** (The Ghost Protocol) into an impenetrable fortress.
 
-![Architecture Diagram](https://raw.githubusercontent.com/PoisedDok/emergent/main/assets/architecture.png)
+```mermaid
+flowchart TD
+    %% Define Styles
+    classDef client fill:#2a2a2a,stroke:#4a4a4a,stroke-width:2px,color:#fff
+    classDef wireguard fill:#1e3a8a,stroke:#3a7ca5,stroke-width:2px,color:#fff
+    classDef container fill:#1c1917,stroke:#c2410c,stroke-width:2px,color:#fff
+    classDef external fill:#3f3f46,stroke:#71717a,stroke-width:2px,color:#fff
+
+    subgraph Clients ["Encrypted VPN Clients"]
+        phone["iPhone (Tailscale App)\nIP: 100.64.0.2"]:::client
+        laptop["Windows Laptop (Tailscale)\nIP: 100.64.0.3"]:::client
+    end
+
+    subgraph Tunnel ["The Transport Layer"]
+        wg["WireGuard Encrypted Tunnel\n(Direct Peer-to-Peer)"]:::wireguard
+    end
+
+    subgraph Server ["Mac Mini (Docker Host)"]
+        hs["Headscale Control Plane\nPort: 6500 (Auth & IP Assign)"]:::container
+        
+        subgraph DNS_Flow ["DNS Resolution Path"]
+            ag["AdGuard Home\nIP: 100.64.0.1:53\n(Ad/Tracker Blackhole)"]:::container
+            mdns["Headscale MagicDNS\nIP: 100.100.100.100\n(Client Name Resolver)"]:::container
+            un["Unbound\nIP: 172.20.0.10\n(DNS-over-TLS)"]:::container
+        end
+
+        subgraph Proxy_Flow ["Tor Proxy Path"]
+            tor["Tor Proxy\nIP: 100.64.0.1:6506 (HTTP)"]:::container
+        end
+    end
+
+    subgraph External ["The Wild West"]
+        isp["Your ISP\n(Sees Only Encrypted Gibberish)"]:::external
+        cf["Cloudflare DNS (1.1.1.1:853)"]:::external
+        tornet["The Tor Network"]:::external
+        web["Internet / .onion sites"]:::external
+    end
+
+    %% Auth Flow
+    phone -.->|"1. Auth Request"| hs
+    laptop -.->|"1. Auth Request"| hs
+
+    %% Data Flow
+    phone <==>|"2. WireGuard Data"| wg
+    laptop <==>|"2. WireGuard Data"| wg
+    
+    wg <==>|"3. DNS Queries"| ag
+    wg <==>|"3. Proxy Traffic"| tor
+
+    %% Internal DNS Logic
+    ag -->|"Who is 100.64.0.2?"| mdns
+    mdns -.->|"It's krish-phone"| ag
+    ag -->|"Where is google.com?"| un
+
+    %% Outbound
+    un -->|"Encrypted DNS Query"| isp
+    tor -->|"Encrypted Onion Traffic"| isp
+    
+    isp -->cf
+    isp -->tornet
+    tornet -->web
+```
 
 ## Why This Stack is Different (The Philosophy)
 
