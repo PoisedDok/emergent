@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # --------------------------------------------------------
+  # PHASE 1: THE VPN CONTROL PLANE
+  # --------------------------------------------------------
+  headscale:
+    build:
+      context: ./src/headscale
+      dockerfile: ../../docker/headscale/Dockerfile
+    container_name: headscale
+    restart: unless-stopped
+    command: serve
+    ports:
+      - "${HEADSCALE_PORT:-6500}:8080"
+    volumes:
+      - ./config/headscale/config.yaml:/etc/headscale/config.yaml:ro
+      - ./data/headscale:/var/lib/headscale
+    networks:
+      - secure_net
+
+  # --------------------------------------------------------
+  # PHASE 2: THE BLIND DNS RESOLVER
+  # --------------------------------------------------------
+  unbound:
+    build:
+      context: ./src/unbound-docker/1.22.0
+      dockerfile: Dockerfile
+    container_name: unbound
+    restart: unless-stopped
+    volumes:
+      - ./config/unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
+    networks:
+      secure_net:
+        ipv4_address: 172.20.0.10
+
+  # --------------------------------------------------------
+  # PHASE 3: THE AD/TRACKER BLACKHOLE
+  # --------------------------------------------------------
+  adguardhome:
+    build:
+      context: ./src/adguardhome
+      dockerfile: ../../docker/adguardhome/Dockerfile
+    container_name: adguardhome
+    restart: unless-stopped
+    command: -c /opt/adguardhome/conf/AdGuardHome.yaml -w /opt/adguardhome/work
+    ports:
+      - "${ADGUARD_DNS_PORT:-6501}:53/tcp"
+      - "${ADGUARD_DNS_PORT:-6501}:53/udp"
+      - "${ADGUARD_WEB_PORT:-6502}:80/tcp"
+      - "6505:3000/tcp"
+    volumes:
+      - ./data/adguard/work:/opt/adguardhome/work
+      - ./data/adguard/conf:/opt/adguardhome/conf
+    networks:
+      - secure_net
+    depends_on:
+      - unbound
+
+  # --------------------------------------------------------
+  # PHASE 4: THE GHOST PROTOCOL (TOR)
+  # --------------------------------------------------------
+  torproxy:
+    build:
+      context: ./src/torproxy
+      dockerfile: Dockerfile
+    container_name: torproxy
+    restart: unless-stopped
+    ports:
+      - "${TOR_PROXY_PORT:-6503}:9050"
+      - "${TOR_HTTP_PORT:-6506}:9051"
+    volumes:
+      - ./config/torproxy/torrc:/etc/tor/torrc:ro
+      - ./data/torproxy/data:/var/lib/tor
+    networks:
+      - secure_net
+
+  # --------------------------------------------------------
+  # PHASE 5: DOCKER SOCKET PROXY
+  # --------------------------------------------------------
+  dockerproxy:
+    build:
+      context: ./src/docker-socket-proxy
+    container_name: dockerproxy
+    restart: unless-stopped
+    environment:
+      - CONTAINERS=1
+    ports:
+      - "127.0.0.1:${DOCKER_PROXY_PORT:-6504}:2375"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - secure_net
+
+networks:
+  secure_net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

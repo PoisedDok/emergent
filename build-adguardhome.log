@@ -1,0 +1,127 @@
+--progress is a global compose flag, better use `docker compose --progress xx build ...
+time="2026-02-26T00:05:08Z" level=warning msg="/Volumes/Disk-D/Aether_Repos/emergent/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.06kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 535B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/golang:alpine
+#3 ...
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#4 DONE 0.4s
+
+#3 [internal] load metadata for docker.io/library/golang:alpine
+#3 DONE 0.4s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [builder 1/5] FROM docker.io/library/golang:alpine@sha256:d4c4845f5d60c6a974c6000ce58ae079328d03ab7f721a0734277e69905473e5
+#6 resolve docker.io/library/golang:alpine@sha256:d4c4845f5d60c6a974c6000ce58ae079328d03ab7f721a0734277e69905473e5 done
+#6 DONE 0.0s
+
+#7 [stage-1 1/4] FROM docker.io/library/alpine:latest@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+#7 resolve docker.io/library/alpine:latest@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 done
+#7 DONE 0.0s
+
+#8 [stage-1 2/4] RUN apk add --no-cache ca-certificates tzdata
+#8 CACHED
+
+#9 [internal] load build context
+#9 transferring context: 63.18kB 0.0s done
+#9 DONE 0.0s
+
+#10 [builder 2/5] RUN apk add --no-cache git make npm nodejs bash python3
+#10 CACHED
+
+#11 [builder 3/5] WORKDIR /app
+#11 CACHED
+
+#12 [builder 4/5] COPY . .
+#12 CACHED
+
+#13 [builder 5/5] RUN rm -rf .git && make build REVISION=dev VERSION=v0.0.0
+#13 0.160 npm --prefix client --quiet --no-progress ci
+#13 1.964 npm warn deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+#13 3.070 npm warn deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+#13 3.071 npm warn deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+#13 3.468 npm warn deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+#13 5.689 npm warn deprecated popper.js@1.16.1: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+#13 6.049 npm warn deprecated mini-create-react-context@0.4.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+#13 10.52 npm warn deprecated core-js@1.2.7: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+#13 13.72 npm warn deprecated @babel/plugin-proposal-optional-chaining@7.21.0: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-optional-chaining instead.
+#13 13.72 npm warn deprecated @babel/plugin-proposal-object-rest-spread@7.20.7: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-object-rest-spread instead.
+#13 13.73 npm warn deprecated @babel/plugin-proposal-class-properties@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-properties instead.
+#13 13.73 npm warn deprecated @babel/plugin-proposal-nullish-coalescing-operator@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-nullish-coalescing-operator instead.
+#13 15.43 npm warn deprecated rimraf@2.6.3: Rimraf versions prior to v4 are no longer supported
+#13 26.38 
+#13 26.38 added 1372 packages, and audited 1373 packages in 26s
+#13 26.38 
+#13 26.38 245 packages are looking for funding
+#13 26.38   run `npm fund` for details
+#13 26.40 
+#13 26.40 34 vulnerabilities (2 low, 8 moderate, 24 high)
+#13 26.40 
+#13 26.40 To address issues that do not require attention, run:
+#13 26.40   npm audit fix
+#13 26.40 
+#13 26.40 To address all issues (including breaking changes), run:
+#13 26.40   npm audit fix --force
+#13 26.40 
+#13 26.40 Run `npm audit` for details.
+#13 26.45 env  CHANNEL='development'  DEPLOY_SCRIPT_PATH='not/a/real/path'  DIST_DIR='dist'  GO="${GO:-go}"  GOAMD64='v1'  GOPROXY='https://proxy.golang.org|direct'  GOTELEMETRY='off'  GOTOOLCHAIN='go1.25.7'  GPG_KEY='devteam@adguard.com'  GPG_KEY_PASSPHRASE='not-a-real-password'  NEXTAPI='0'  PATH="${PWD}/bin:$("${GO:-go}" env GOPATH)/bin:${PATH}"  RACE='0'  REVISION="dev"  SIGN='1'  SIGNER_API_KEY='not-a-real-key'  VERBOSE="${VERBOSE:-0}"  VERSION="v0.0.0"            "/bin/sh"    ./scripts/make/go-deps.sh
+#13 26.45 go: downloading go1.25.7 (linux/arm64)
+#13 73.31 npm --prefix client run build-prod
+#13 73.41 
+#13 73.41 > dashboard@0.1.0 build-prod
+#13 73.41 > cross-env BUILD_ENV=prod webpack --config webpack.prod.js
+#13 73.41 
+#13 80.41 (node:81) [DEP_WEBPACK_TEMPLATE_PATH_PLUGIN_REPLACE_PATH_VARIABLES_HASH] DeprecationWarning: [hash] is now [fullhash] (also consider using [chunkhash] or [contenthash], see documentation for details)
+#13 80.41 (Use `node --trace-deprecation ...` to show where the warning was created)
+#13 87.72 12 assets
+#13 87.72 1437 modules
+#13 87.72 webpack 5.102.1 compiled successfully in 13861 ms
+#13 87.86 env  CHANNEL='development'  DEPLOY_SCRIPT_PATH='not/a/real/path'  DIST_DIR='dist'  GO="${GO:-go}"  GOAMD64='v1'  GOPROXY='https://proxy.golang.org|direct'  GOTELEMETRY='off'  GOTOOLCHAIN='go1.25.7'  GPG_KEY='devteam@adguard.com'  GPG_KEY_PASSPHRASE='not-a-real-password'  NEXTAPI='0'  PATH="${PWD}/bin:$("${GO:-go}" env GOPATH)/bin:${PATH}"  RACE='0'  REVISION="dev"  SIGN='1'  SIGNER_API_KEY='not-a-real-key'  VERBOSE="${VERBOSE:-0}"  VERSION="v0.0.0"            "/bin/sh"    ./scripts/make/go-build.sh
+#13 87.88 fatal: not a git repository (or any of the parent directories): .git
+#13 87.88 make: *** [Makefile:120: go-build] Error 128
+#13 ERROR: process "/bin/sh -c rm -rf .git && make build REVISION=dev VERSION=v0.0.0" did not complete successfully: exit code: 2
+------
+ > [builder 5/5] RUN rm -rf .git && make build REVISION=dev VERSION=v0.0.0:
+73.41 > cross-env BUILD_ENV=prod webpack --config webpack.prod.js
+73.41 
+80.41 (node:81) [DEP_WEBPACK_TEMPLATE_PATH_PLUGIN_REPLACE_PATH_VARIABLES_HASH] DeprecationWarning: [hash] is now [fullhash] (also consider using [chunkhash] or [contenthash], see documentation for details)
+80.41 (Use `node --trace-deprecation ...` to show where the warning was created)
+87.72 12 assets
+87.72 1437 modules
+87.72 webpack 5.102.1 compiled successfully in 13861 ms
+87.86 env  CHANNEL='development'  DEPLOY_SCRIPT_PATH='not/a/real/path'  DIST_DIR='dist'  GO="${GO:-go}"  GOAMD64='v1'  GOPROXY='https://proxy.golang.org|direct'  GOTELEMETRY='off'  GOTOOLCHAIN='go1.25.7'  GPG_KEY='devteam@adguard.com'  GPG_KEY_PASSPHRASE='not-a-real-password'  NEXTAPI='0'  PATH="${PWD}/bin:$("${GO:-go}" env GOPATH)/bin:${PATH}"  RACE='0'  REVISION="dev"  SIGN='1'  SIGNER_API_KEY='not-a-real-key'  VERBOSE="${VERBOSE:-0}"  VERSION="v0.0.0"            "/bin/sh"    ./scripts/make/go-build.sh
+87.88 fatal: not a git repository (or any of the parent directories): .git
+87.88 make: *** [Makefile:120: go-build] Error 128
+------
+Dockerfile:10
+
+--------------------
+
+   8 |     
+
+   9 |     # Build the frontend and backend using AdGuard Home's Makefile
+
+  10 | >>> RUN rm -rf .git && make build REVISION=dev VERSION=v0.0.0
+
+  11 |     
+
+  12 |     FROM alpine:latest
+
+--------------------
+
+failed to solve: process "/bin/sh -c rm -rf .git && make build REVISION=dev VERSION=v0.0.0" did not complete successfully: exit code: 2
+
+
+
+View build details: docker-desktop://dashboard/build/default/default/juqdskm6rcjzs5no2f5j1h9to
+

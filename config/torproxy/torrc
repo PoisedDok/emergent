@@ -1,0 +1,9 @@
+SocksPort 0.0.0.0:9050
+SocksPolicy accept *
+HTTPTunnelPort 0.0.0.0:9051
+Log notice stdout
+DataDirectory /var/lib/tor
+# Change Tor exit node every 2 mins
+NewCircuitPeriod 120
+# Ensure Onion DNS works correctly
+AutomapHostsOnResolve 1

@@ -1,0 +1,15 @@
+[submodule "src/headscale"]
+	path = src/headscale
+	url = https://github.com/juanfont/headscale.git
+[submodule "src/unbound-docker"]
+	path = src/unbound-docker
+	url = https://github.com/MatthewVance/unbound-docker.git
+[submodule "src/adguardhome"]
+	path = src/adguardhome
+	url = https://github.com/AdguardTeam/AdGuardHome.git
+[submodule "src/torproxy"]
+	path = src/torproxy
+	url = https://github.com/gnzsnz/torproxy.git
+[submodule "src/docker-socket-proxy"]
+	path = src/docker-socket-proxy
+	url = https://github.com/Tecnativa/docker-socket-proxy.git
