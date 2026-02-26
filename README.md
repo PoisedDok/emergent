@@ -1,6 +1,6 @@
 # Emergent Privacy Stack
 
-> A self-hosted, God-level, sovereign network infrastructure with strict Zero-Trust paradigms.
+> A self-hosted, enterprise-grade, sovereign network infrastructure with strict Zero-Trust paradigms.
 >
 > **Architected by [Krish Dokania](https://github.com/PoisedDok) | Built at [Aether Inc.](https://aetherinc.xyz)**
 
@@ -119,7 +119,7 @@ Most open-source stack tutorials make critical security flaws:
     ```bash
     make build
     ```
-4.  **Launch the God-Level Stack:**
+4.  **Launch the Stack:**
     ```bash
     make up
     ```

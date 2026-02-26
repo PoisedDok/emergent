@@ -9,7 +9,7 @@ setup:
 	@echo "Setup complete. Please review .env and configs before running 'make build'."
 
 fix-perms:
-	@echo "Securing data directory permissions (God-Level Security)..."
+	@echo "Securing data directory permissions (Strict Isolation)..."
 	docker run --rm -v $(PWD)/data/torproxy/data:/var/lib/tor alpine sh -c 'chown -R 1000:1000 /var/lib/tor && chmod -R 700 /var/lib/tor'
 	chmod 777 data/headscale
 

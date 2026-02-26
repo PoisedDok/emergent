@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Emergent Privacy Stack - Management CLI
-# God-Level Architecture Control Interface
+# Enterprise Architecture Control Interface
 
 set -e
 
