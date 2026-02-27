@@ -1,6 +1,7 @@
 {
   "acls": [
-    { "action": "accept", "src": ["*"], "dst": ["*:*"] }
+    { "action": "accept", "src": ["*"], "dst": ["0.0.0.0/0:*", "::/0:*"] },
+    { "action": "accept", "src": ["*"], "dst": ["100.64.0.5:53", "100.64.0.5:80", "100.64.0.5:6502"] }
   ],
   "autoApprovers": {
     "routes": {
