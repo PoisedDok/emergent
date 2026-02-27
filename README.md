@@ -103,6 +103,20 @@ The true genius of this architecture lies in understanding the difference betwee
 Because the Control Plane is completely isolated on your LAN, manually toggling the VPN OFF while on cellular data will require the client to re-authenticate with the Control Plane to turn back ON—which it cannot reach.
 **Zero-trust networks are designed to be "Always On".** Leave the connection permanently active. iOS, Android, and desktop clients are intelligent enough to flawlessly handle the handover from Wi-Fi to Cellular without dropping packets or leaking DNS, relying purely on the cryptographically secure Data Plane.
 
+## Resilience & Edge Cases (The "What Ifs")
+
+Understanding how the stack behaves under duress is critical for enterprise deployment.
+
+### Scenario 1: Unattended Host Restart (Power Outage)
+*   **What happens:** Your home Mac Mini loses power while you are traveling in another country. Your phone loses VPN connectivity.
+*   **The Recovery:** As long as your host OS is configured to auto-boot after a power failure, Docker will automatically start. The `docker-compose.yml` enforces `restart: unless-stopped` on all containers. The Headscale, AdGuard, and Tor containers spin back up. The `tailscale-sidecar` reads its persistent cryptographic state from the disk, authenticates locally, and reconnects to the global DERP network.
+*   **The Result:** 100% Self-Healing. Within seconds of your host booting up, your phone (halfway across the world) will automatically handshake with the DERP relays and re-establish the encrypted tunnel. No manual intervention is required.
+
+### Scenario 2: The Nomadic Host (Running on a traveling laptop)
+*   **What happens:** Instead of a stationary home server, you deploy the Emergent Stack on a laptop that travels with you to coffee shops and hotels.
+*   **The Problem:** This breaks the Air-Gapped Control Plane model. Your phone's Tailscale app is hardcoded to look for the Control Plane at your home LAN IP (e.g., `192.168.0.105`). When you take the laptop to a coffee shop, it receives a new local IP (e.g., `10.0.1.44`). While existing cached Data Plane connections *might* survive temporarily via DERP, your phone can no longer reach the Control Plane for map updates, key renewals, or reconnects.
+*   **The Verdict:** **Not Recommended.** The Emergent host must be a **stationary anchor** (a home Mac Mini, Raspberry Pi, or a cloud VPS). If you run the host on a traveling device, you will be forced to manually update the Custom Server URL on all your clients every time your laptop connects to a new Wi-Fi network.
+
 ## Architecture & Data Flow
 
 1.  **Headscale (Port 6500):** Acts purely as the Control Plane. It authenticates devices and brokers WireGuard keys. It does *not* route data.
