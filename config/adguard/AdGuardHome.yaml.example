@@ -112,6 +112,18 @@ filters:
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt
     name: AdAway Default Blocklist
     id: 2
+  - enabled: true
+    url: https://big.oisd.nl/domainswild
+    name: OISD Full (Zero FP)
+    id: 3
+  - enabled: true
+    url: https://urlhaus.abuse.ch/downloads/hostfile/
+    name: URLhaus Malware Filter
+    id: 4
+  - enabled: true
+    url: https://phishing.army/download/phishing_army_blocklist_extended.txt
+    name: Phishing Army
+    id: 5
 whitelist_filters: []
 user_rules: []
 dhcp:
