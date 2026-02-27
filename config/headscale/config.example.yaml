@@ -16,6 +16,8 @@ server_url: http://<HOST_LAN_IP>:6500
 cors_allow_origins:
   - "http://100.64.0.1:6507"
   - "http://127.0.0.1:6507"
+  - "http://localhost:6507"
+  - "http://<HOST_LAN_IP>:6507"
 
 # Address to listen to / bind to on the server
 #
