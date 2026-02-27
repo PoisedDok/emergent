@@ -23,6 +23,7 @@ function show_help() {
     echo "Stack Control Commands:"
     echo "  up                     Start the entire stack (with permission checks)."
     echo "  down                   Stop the entire stack."
+    echo "  update                 Securely update all infrastructure submodules from upstream."
     echo "  logs [service]         View live logs for a specific service (or all if omitted)."
     echo "                         (services: headscale, unbound, adguardhome, torproxy, dockerproxy)"
     echo ""
@@ -92,6 +93,12 @@ case $COMMAND in
     down)
         echo "=> Tearing down stack..."
         make down
+        ;;
+
+    update)
+        echo "=> Securely updating infrastructure submodules from upstream..."
+        echo "=> (Note: Bypassing local AdGuard codebase to preserve custom configuration)"
+        make update
         ;;
 
     logs)
