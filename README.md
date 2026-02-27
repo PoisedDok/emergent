@@ -114,8 +114,10 @@ Understanding how the stack behaves under duress is critical for enterprise depl
 
 ### Scenario 2: The Nomadic Host (Running on a traveling laptop)
 *   **What happens:** Instead of a stationary home server, you deploy the Emergent Stack on a laptop that travels with you to coffee shops and hotels.
-*   **The Problem:** This breaks the Air-Gapped Control Plane model. Your phone's Tailscale app is hardcoded to look for the Control Plane at your home LAN IP (e.g., `192.168.0.105`). When you take the laptop to a coffee shop, it receives a new local IP (e.g., `10.0.1.44`). While existing cached Data Plane connections *might* survive temporarily via DERP, your phone can no longer reach the Control Plane for map updates, key renewals, or reconnects.
-*   **The Verdict:** **Not Recommended.** The Emergent host must be a **stationary anchor** (a home Mac Mini, Raspberry Pi, or a cloud VPS). If you run the host on a traveling device, you will be forced to manually update the Custom Server URL on all your clients every time your laptop connects to a new Wi-Fi network.
+*   **The Problem:** The Control Plane is bound to a specific IP or interface. When you switch Wi-Fi networks, your laptop's local IP changes (e.g., from `192.168.0.105` to `10.0.1.44`). Your phone's Tailscale app is hardcoded to look for the Control Plane at the old IP, meaning it can no longer re-authenticate or download map updates.
+*   **The Solution (The "Travel Mode" Architecture):** If you *must* run this on a traveling laptop, you must alter the architecture to break the reliance on the Local Area Network IP. There are two ways to achieve this:
+    1.  **The Sovereign VPS (Recommended for Travel):** You deploy the Emergent Stack on a $5/month cloud server (like DigitalOcean or AWS). This gives the Control Plane a permanent, static public IP address. Your laptop and phone both become clients of this cloud fortress.
+    2.  **The Localhost Loopback (Advanced):** If you only need the VPN to protect the *laptop itself* (and you don't care about connecting your phone to it), you can change the `server_url` in `config.yaml` to `http://127.0.0.1:6500` and use `listen_addr: 127.0.0.1:8080`. This binds Headscale entirely to the internal loopback. The stack will function perfectly as an isolated privacy cocoon regardless of what Wi-Fi network the laptop connects to, but **external devices (like your phone) will never be able to join.**
 
 ## Architecture & Data Flow
 
