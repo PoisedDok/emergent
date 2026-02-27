@@ -53,7 +53,6 @@ services:
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
-      - sys_module
     networks:
       - secure_net
     ports:
