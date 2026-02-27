@@ -11,39 +11,12 @@ services:
     container_name: headscale
     restart: unless-stopped
     command: serve
+    ports:
+      - "${HEADSCALE_PORT:-6500}:8080"
     volumes:
       - ./config/headscale/config.yaml:/etc/headscale/config.yaml:ro
       - ./config/headscale/acl.json:/etc/headscale/acl.json:ro
       - ./data/headscale:/var/lib/headscale
-    networks:
-      - secure_net
-
-  # --------------------------------------------------------
-  # PHASE 1.2: THE API GATEWAY (CADDY FOR CORS)
-  # --------------------------------------------------------
-  headscale-proxy:
-    image: caddy:alpine
-    container_name: headscale-proxy
-    restart: unless-stopped
-    ports:
-      - "${HEADSCALE_PORT:-6500}:6500"
-    volumes:
-      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-    networks:
-      - secure_net
-    depends_on:
-      - headscale
-
-  # --------------------------------------------------------
-  # PHASE 1.5: THE CONTROL PANEL (HEADSCALE UI)
-  # --------------------------------------------------------
-  headscale-ui:
-    image: ghcr.io/gurucomputing/headscale-ui:latest
-    container_name: headscale-ui
-    restart: unless-stopped
-    ports:
-      - "127.0.0.1:6507:8080"
-      - "100.64.0.1:6507:8080"
     networks:
       - secure_net
 
