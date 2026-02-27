@@ -23,8 +23,8 @@ flowchart TD
         laptop["Windows Laptop (Tailscale)\nIP: 100.64.0.y"]:::client
     end
 
-    subgraph Tunnel ["The Transport Layer"]
-        wg["WireGuard Encrypted Tunnel\n(Direct Peer-to-Peer)"]:::wireguard
+    subgraph Tunnel ["The Transport Layer (Data Plane)"]
+        wg["WireGuard Encrypted Tunnel\n(Direct Peer-to-Peer or via DERP)"]:::wireguard
     end
 
     subgraph Server ["Mac Mini (Docker Host)"]
@@ -49,8 +49,8 @@ flowchart TD
     end
 
     %% Auth Flow
-    phone -.->|"1. Auth Request"| hs
-    laptop -.->|"1. Auth Request"| hs
+    phone -.->|"1. Auth Request (LAN only)"| hs
+    laptop -.->|"1. Auth Request (LAN only)"| hs
 
     %% Data Flow
     phone <==>|"2. WireGuard Data"| wg
@@ -91,10 +91,22 @@ Most open-source stack tutorials make critical security flaws:
 *   **Dynamic DNS Tracking:** Because of the Sidecar, AdGuard bypasses Docker's NAT proxy and sees the exact `100.64.x.x` IP of every device. It is wired back into Headscale's MagicDNS (`100.100.100.100`) to dynamically resolve those IPs to their machine hostnames. You get perfect, per-device traffic statistics without manually hardcoding IPs.
 *   **Automatic Exit Node:** The included `acl.json` is pre-configured to automatically approve `0.0.0.0/0` routes. This allows your host machine to instantly function as an encrypted Exit Node for your mobile devices on public Wi-Fi.
 
+## The Fortress Design: Control Plane vs. Data Plane
+
+The true genius of this architecture lies in understanding the difference between the **Control Plane** and the **Data Plane**. We do not expose the VPN server to the public internet because doing so introduces unnecessary attack vectors. Instead, we use an **Air-Gapped Control Plane**.
+
+*   **The Control Plane (Headscale):** Locked purely to your Local Area Network (LAN). It acts as the root cryptographic authority. You can only authenticate new devices or renew keys when physically present on your home Wi-Fi. Your house is essentially a hardware security key.
+*   **The Data Plane (WireGuard & DERP):** Once your device logs in and receives its cryptographic keys on your LAN, those keys are cached. **Your device no longer needs to talk to the Control Plane.** When you walk out the door and switch to 5G or a hotel Wi-Fi, the Tailscale client seamlessly shifts to the decentralized Data Plane. If a direct peer-to-peer connection back to your home server is blocked by a strict firewall (like CGNAT), the client automatically encrypts your traffic and bounces it off a global, free **DERP (Designated Encrypted Relay for Packets)** node.
+
+### The "Always-On" Rule
+**Never manually disconnect the VPN on your client devices.** 
+Because the Control Plane is completely isolated on your LAN, manually toggling the VPN OFF while on cellular data will require the client to re-authenticate with the Control Plane to turn back ON—which it cannot reach.
+**Zero-trust networks are designed to be "Always On".** Leave the connection permanently active. iOS, Android, and desktop clients are intelligent enough to flawlessly handle the handover from Wi-Fi to Cellular without dropping packets or leaking DNS, relying purely on the cryptographically secure Data Plane.
+
 ## Architecture & Data Flow
 
 1.  **Headscale (Port 6500):** Acts purely as the Control Plane. It authenticates devices and brokers WireGuard keys. It does *not* route data.
-2.  **WireGuard:** Once authenticated, clients form a direct, encrypted, peer-to-peer tunnel with the server.
+2.  **WireGuard:** Once authenticated, clients form a direct, encrypted, peer-to-peer tunnel with the server (or fallback to DERP relays if strict firewalls are present).
 3.  **AdGuard Home:** Intercepts all DNS queries from the WireGuard tunnel. If the domain is an ad tracker, it drops the connection.
 4.  **Unbound:** If AdGuard allows the request, it is forwarded to the local Unbound container, which wraps the query in military-grade TLS and sends it to Cloudflare (`1.1.1.1:853`). Your ISP cannot see your DNS requests.
 5.  **Tor Proxy (Port 6506):** An isolated container. When your browser requests a `.onion` address, the traffic is routed over the VPN, injected into the Tor proxy, and bounced through 3 global nodes.
@@ -137,7 +149,7 @@ Most open-source stack tutorials make critical security flaws:
 
 4.  **Build & Deploy:**
     ```bash
-    # Build the God-level source images
+    # Build the enterprise-grade source images
     make build
 
     # Secure permissions and spin up the entire stack in detached mode
