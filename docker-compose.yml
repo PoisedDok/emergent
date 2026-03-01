@@ -51,6 +51,12 @@ services:
     volumes:
       - ./data/sidecar/state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
+    healthcheck:
+      test: ["CMD", "tailscale", "status"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     cap_add:
       - net_admin
       - sys_module
@@ -76,8 +82,10 @@ services:
       - ./data/adguard/work:/opt/adguardhome/work
       - ./config/adguard:/opt/adguardhome/conf
     depends_on:
-      - unbound
-      - tailscale-sidecar
+      tailscale-sidecar:
+        condition: service_healthy
+      unbound:
+        condition: service_started
 
   # --------------------------------------------------------
   # PHASE 4: THE GHOST PROTOCOL (TOR)
