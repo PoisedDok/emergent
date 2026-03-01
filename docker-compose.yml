@@ -105,7 +105,8 @@ services:
       - ./config/torproxy/torrc:/etc/tor/torrc:ro
       - ./data/torproxy/data:/var/lib/tor
     networks:
-      - secure_net
+      secure_net:
+        ipv4_address: 172.20.0.6
 
   # --------------------------------------------------------
   # PHASE 5: DOCKER SOCKET PROXY
