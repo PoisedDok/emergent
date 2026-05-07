@@ -1,6 +1,9 @@
 # System files
 .DS_Store
 
+# Claude Code internals (skills contain internal infra details)
+.claude/
+
 # Data directories (do not leak DBs, keys, or logs)
 data/
 
