@@ -39,8 +39,10 @@ export const getStatsRequest = createAction('GET_STATS_REQUEST');
 export const getStatsFailure = createAction('GET_STATS_FAILURE');
 export const getStatsSuccess = createAction('GET_STATS_SUCCESS');
 
-export const getStats = () => async (dispatch: any) => {
-    dispatch(getStatsRequest());
+export const getStats = (isPolling = false) => async (dispatch: any) => {
+    if (!isPolling) {
+        dispatch(getStatsRequest());
+    }
     try {
         const stats = await apiClient.getStats();
         const normalizedTopClients = normalizeTopStats(stats.top_clients);
@@ -61,7 +63,9 @@ export const getStats = () => async (dispatch: any) => {
 
         dispatch(getStatsSuccess(normalizedStats));
     } catch (error) {
-        dispatch(addErrorToast({ error }));
+        if (!isPolling) {
+            dispatch(addErrorToast({ error }));
+        }
         dispatch(getStatsFailure());
     }
 };

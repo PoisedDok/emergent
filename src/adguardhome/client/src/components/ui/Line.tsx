@@ -17,24 +17,65 @@ interface LineProps {
     color?: string;
     width?: number;
     height?: number;
+    showAxes?: boolean;
 }
 
-const Line = ({ data, color = 'black' }: LineProps) => {
+const Line = ({ data, color = 'black', showAxes = false }: LineProps) => {
     const interval = useSelector((state: RootState) => state.stats.interval);
 
     const timeUnits = useSelector((state: RootState) => state.stats.timeUnits);
+    const reduxTheme = useSelector((state: RootState) => state.dashboard?.theme);
+
+    const themeAttr = document.body.dataset.theme || document.body.getAttribute('data-theme') || '';
+    const isDark = themeAttr.toLowerCase() === 'dark' || reduxTheme === 'dark';
+
+    const textColor = isDark ? 'var(--gray-300)' : 'var(--gray-500)';
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'var(--gray-200)';
+    const axisColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'var(--gray-300)';
 
     return (
         <ResponsiveLine
             enableArea
             animate
-            lineWidth={3}
+            lineWidth={showAxes ? 2 : 3}
             areaOpacity={0.15}
             enableSlices="x"
-            curve="monotoneX"
+            curve="catmullRom"
             colors={[color]}
             data={data}
             theme={{
+                textColor: textColor,
+                fontSize: 11,
+                axis: {
+                    domain: {
+                        line: {
+                            stroke: axisColor,
+                            strokeWidth: 1,
+                        },
+                    },
+                    legend: {
+                        text: {
+                            fontSize: 12,
+                            fill: textColor,
+                        },
+                    },
+                    ticks: {
+                        line: {
+                            stroke: axisColor,
+                            strokeWidth: 1,
+                        },
+                        text: {
+                            fontSize: 11,
+                            fill: textColor,
+                        },
+                    },
+                },
+                grid: {
+                    line: {
+                        stroke: gridColor,
+                        strokeWidth: 1,
+                    },
+                },
                 crosshair: {
                     line: {
                         stroke: 'currentColor',
@@ -49,8 +90,37 @@ const Line = ({ data, color = 'black' }: LineProps) => {
                 max: 'auto',
             }}
             crosshairType="x"
-            axisLeft={null}
-            axisBottom={null}
+            margin={
+                showAxes
+                    ? { top: 20, right: 20, bottom: 60, left: 60 }
+                    : undefined
+            }
+            axisLeft={
+                showAxes
+                    ? {
+                          tickSize: 5,
+                          tickPadding: 5,
+                          tickRotation: 0,
+                      }
+                    : null
+            }
+            axisBottom={
+                showAxes
+                    ? {
+                          tickSize: 5,
+                          tickPadding: 5,
+                          tickRotation: -45,
+                          format: (x: number) => {
+                              if (timeUnits === TIME_UNITS.HOURS) {
+                                  const hoursAgo = msToHours(interval) - x - 1;
+                                  return dateFormat(subHours(Date.now(), hoursAgo), 'D MMM HH:00');
+                              }
+                              const daysAgo = subDays(Date.now(), msToDays(interval) - 1);
+                              return dateFormat(addDays(daysAgo, x), 'D MMM YYYY');
+                          },
+                      }
+                    : null
+            }
             enableGridX={null}
             enableGridY={null}
             enablePoints={null}

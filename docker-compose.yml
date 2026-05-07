@@ -16,6 +16,7 @@ services:
     volumes:
       - ./config/headscale/config.yaml:/etc/headscale/config.yaml:ro
       - ./config/headscale/acl.json:/etc/headscale/acl.json:ro
+      - ./config/headscale/derp-map.yaml:/etc/headscale/derp-map.yaml:ro
       - ./data/headscale:/var/lib/headscale
     networks:
       - secure_net
@@ -39,12 +40,12 @@ services:
   # PHASE 3.5: THE SIDECAR
   # --------------------------------------------------------
   tailscale-sidecar:
-    image: tailscale/tailscale:latest
+    image: tailscale/tailscale:v1.80.3
     container_name: tailscale-sidecar
     hostname: adguard-sidecar
     environment:
       - TS_AUTHKEY=${TS_SIDECAR_AUTHKEY}
-      - TS_EXTRA_ARGS=--login-server=http://${HOST_LAN_IP:-192.168.0.105}:6500 --accept-dns=false
+      - TS_EXTRA_ARGS=--login-server=http://headscale:8080 --accept-dns=false
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_NO_LOGS_NO_SUPPORT=true
       - TS_USERSPACE=false
@@ -98,9 +99,7 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:${TOR_PROXY_PORT:-6503}:9050"
-      - "100.64.0.1:${TOR_PROXY_PORT:-6503}:9050"
       - "127.0.0.1:${TOR_HTTP_PORT:-6506}:9051"
-      - "100.64.0.1:${TOR_HTTP_PORT:-6506}:9051"
     volumes:
       - ./config/torproxy/torrc:/etc/tor/torrc:ro
       - ./data/torproxy/data:/var/lib/tor

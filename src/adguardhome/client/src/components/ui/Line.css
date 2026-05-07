@@ -22,6 +22,8 @@
 
 .card-chart-bg {
     color: var(--black);
+    overflow: hidden;
+    clip-path: inset(0 0 0 0 round 0 0 8px 8px);
 }
 
 .card-chart-bg path[d^='M0,32'] {

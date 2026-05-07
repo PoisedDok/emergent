@@ -27,7 +27,7 @@ interface DashboardProps {
     dashboard: DashboardData;
     stats: StatsData;
     access: AccessData;
-    getStats: (...args: unknown[]) => unknown;
+    getStats: (isPolling?: boolean) => unknown;
     getStatsConfig: (...args: unknown[]) => unknown;
     toggleProtection: (...args: unknown[]) => unknown;
     getClients: (...args: unknown[]) => unknown;
@@ -53,6 +53,33 @@ const Dashboard = ({
 
     useEffect(() => {
         getAllStats();
+        
+        let timeoutId: ReturnType<typeof setTimeout>;
+        let isMounted = true;
+
+        const poll = async () => {
+            if (!isMounted) return;
+            
+            try {
+                if (!document.hidden) {
+                    await getStats(true);
+                }
+            } catch (e) {
+                // Ignore errors here, handled in action
+            } finally {
+                if (isMounted) {
+                    timeoutId = setTimeout(poll, 5000);
+                }
+            }
+        };
+
+        // Start polling loop
+        timeoutId = setTimeout(poll, 5000);
+
+        return () => {
+            isMounted = false;
+            clearTimeout(timeoutId);
+        };
     }, []);
     const getSubtitle = () => {
         if (!stats.enabled) {
