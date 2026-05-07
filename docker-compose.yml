@@ -54,10 +54,10 @@ services:
       - /dev/net/tun:/dev/net/tun
     healthcheck:
       test: ["CMD", "tailscale", "status"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
+      interval: 10s
+      timeout: 15s
+      retries: 12
+      start_period: 60s
     cap_add:
       - net_admin
       - sys_module
@@ -100,6 +100,9 @@ services:
     ports:
       - "127.0.0.1:${TOR_PROXY_PORT:-6503}:9050"
       - "127.0.0.1:${TOR_HTTP_PORT:-6506}:9051"
+    # Wipe stale guard-state on every start to prevent "all guards excluded" circuit failures
+    entrypoint: ["/usr/bin/tini", "--"]
+    command: ["sh", "-c", "rm -f /var/lib/tor/guard-state /var/lib/tor/state && exec /usr/bin/tor"]
     volumes:
       - ./config/torproxy/torrc:/etc/tor/torrc:ro
       - ./data/torproxy/data:/var/lib/tor
